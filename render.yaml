@@ -1,0 +1,24 @@
+# Render "Blueprint": Render reads this file and creates the web service for you.
+services:
+  - type: web
+    name: municipal-tax-system
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # --preload creates the tables once before workers start; 1 worker is right for SQLite
+    startCommand: gunicorn --preload --workers 1 --threads 4 --bind 0.0.0.0:$PORT app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: PRODUCTION
+        value: "1"
+      - key: SEED_DEMO
+        value: "1"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
